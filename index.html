@@ -369,6 +369,20 @@
       z-index: 1;
       flex-shrink: 0;
     }
+    .portrait-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center,
+        transparent 52%,
+        rgba(10,7,4,.28) 72%,
+        rgba(10,7,4,.62) 88%,
+        rgba(10,7,4,.82) 100%
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
     .portrait-wrap img {
       width: 100%; height: 100%;
       object-fit: cover;
@@ -642,6 +656,51 @@
       text-transform: uppercase;
     }
 
+    /* BIO CARD */
+    .bio-card {
+      background: rgba(255,255,255,.48);
+      backdrop-filter: blur(20px) saturate(1.8);
+      -webkit-backdrop-filter: blur(20px) saturate(1.8);
+      border: 1px solid rgba(255,255,255,.65);
+      border-radius: 8px;
+      padding: 46px 52px;
+      margin-bottom: 30px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 4px 32px rgba(184,145,74,.1), inset 0 1px 0 rgba(255,255,255,.85);
+    }
+    .bio-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent 0%, var(--gold) 40%, var(--gold-light) 60%, transparent 100%);
+      border-radius: 8px 8px 0 0;
+    }
+    .bio-card::after {
+      content: '❧';
+      position: absolute;
+      bottom: 13px; right: 18px;
+      font-size: .85rem;
+      color: var(--gold-pale);
+      pointer-events: none;
+    }
+    .bio-text {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.18rem;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 2;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+    .bio-text span {
+      display: block;
+      margin-top: 14px;
+      font-size: .98rem;
+      color: var(--muted);
+    }
+
     /* BACKGROUND BLOBS */
     .bg-blob {
       position: fixed;
@@ -884,7 +943,22 @@
 
 <main>
 
-  <div class="card">
+  <!-- Memorial bio -->
+  <div class="bio-card scroll-reveal">
+    <span class="sect-icon">🕊</span>
+    <h2 class="sect-title" style="margin-bottom:18px;">Josiah</h2>
+    <div class="divider-sm"></div>
+    <p class="bio-text">
+      Josiah was the quiet strength in every room&nbsp;&mdash;
+      the one who made you feel seen without saying a word.
+      <span>
+        He loved people deeply, laughed easily, and lived generously.
+        His warmth left a mark on everyone who had the honour of knowing him.
+      </span>
+    </p>
+  </div>
+
+  <div class="card scroll-reveal">
     <span class="sect-icon">🕊</span>
     <p class="sect-num">Section 1</p>
     <h2 class="sect-title">Welcome &amp; Opening</h2>
