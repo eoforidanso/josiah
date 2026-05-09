@@ -342,6 +342,29 @@
       transform: rotate(45deg);
     }
 
+    .portrait-container {
+      position: relative;
+      display: inline-block;
+      margin: 0 auto;
+    }
+    .portrait-dove {
+      position: absolute;
+      left: -72px;
+      top: 22%;
+      transform: translateY(-50%) scaleX(-1);
+      font-size: 3.6rem;
+      filter: drop-shadow(0 0 14px rgba(255,255,255,.9)) brightness(10);
+      animation: dove-bob 3.5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 10;
+      line-height: 1;
+    }
+    @keyframes dove-bob {
+      0%, 100% { transform: translateY(calc(-50% - 4px)) scaleX(-1); }
+      50%       { transform: translateY(calc(-50% + 4px)) scaleX(-1); }
+    }
+    @media print { .portrait-dove { display: none; } }
+
     .portrait-ring {
       position: relative;
       width: 216px; height: 216px;
@@ -730,18 +753,6 @@
       animation-delay: -16s;
     }
 
-    /* DOVE */
-    #dove {
-      position: fixed;
-      font-size: 3rem;
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0;
-      filter: drop-shadow(0 2px 12px rgba(212,176,122,.6));
-      will-change: transform, opacity;
-    }
-    @media print { #dove { display: none !important; } }
-
     /* PRINT / PDF */
     @media print {
       @page { margin: 12mm 14mm; size: A4; }
@@ -935,9 +946,12 @@
     <span class="rule-line rev"></span>
   </div>
 
-  <div class="portrait-ring">
-    <div class="portrait-wrap">
-      <img src="josiah.png" alt="Portrait of Josiah" width="192" height="192" />
+  <div class="portrait-container">
+    <span class="portrait-dove" aria-hidden="true">🕊</span>
+    <div class="portrait-ring">
+      <div class="portrait-wrap">
+        <img src="josiah.png" alt="Portrait of Josiah" width="192" height="192" />
+      </div>
     </div>
   </div>
 
@@ -1219,55 +1233,6 @@
   });
 
   // Header parallax
-  // Single dove flies toward Josiah's portrait (top-center)
-  (function() {
-    var dove = document.createElement('div');
-    dove.id = 'dove';
-    dove.setAttribute('aria-hidden', 'true');
-    dove.textContent = '🕊';
-    document.body.appendChild(dove);
-
-    function fly() {
-      var vw = window.innerWidth, vh = window.innerHeight;
-      // Start from bottom-left or bottom-right randomly
-      var fromRight = Math.random() > 0.5;
-      var sx = fromRight ? vw + 60 : -60;
-      var sy = vh * (0.5 + Math.random() * 0.35);
-      // Portrait is at top-center of page
-      var tx = vw * 0.5;
-      var ty = -80;
-      var dur = 9000 + Math.random() * 4000;
-
-      dove.style.left = sx + 'px';
-      dove.style.top  = sy + 'px';
-      dove.style.transform = fromRight ? 'scaleX(-1)' : 'scaleX(1)';
-      dove.style.transition = 'none';
-      dove.style.opacity = '0';
-
-      // Force reflow
-      void dove.offsetWidth;
-
-      dove.style.transition =
-        'left ' + dur + 'ms cubic-bezier(.3,.05,.4,1),' +
-        'top '  + dur + 'ms cubic-bezier(.5,.05,.3,.95),' +
-        'opacity 1.2s ease';
-      dove.style.left    = tx + 'px';
-      dove.style.top     = ty + 'px';
-      dove.style.opacity = '0.92';
-
-      // Fade out near end
-      setTimeout(function() {
-        dove.style.opacity = '0';
-      }, dur - 1200);
-
-      // Repeat after flight finishes + random pause
-      setTimeout(fly, dur + 4000 + Math.random() * 8000);
-    }
-
-    // First flight after 3 seconds
-    setTimeout(fly, 3000);
-  })();
-
   window.addEventListener('scroll', () => {
     document.documentElement.style.setProperty('--scroll-y', window.scrollY + 'px');
   }, { passive: true });
