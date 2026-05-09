@@ -1233,6 +1233,18 @@
     document.documentElement.style.setProperty('--scroll-y', window.scrollY + 'px');
   }, { passive: true });
 
+  // Shared helper: stop all inline players
+  function stopAllPlayers() {
+    ['peace', 'ogod'].forEach(id => {
+      const a = document.getElementById(id + '-audio');
+      const icon = document.getElementById(id + '-icon');
+      const lbl  = document.getElementById(id + '-label');
+      if (a && !a.paused) { a.pause(); a.currentTime = 0; }
+      if (icon) icon.textContent = '▶';
+      if (lbl)  lbl.textContent  = 'Play';
+    });
+  }
+
   // "It Is Well" inline player
   (function() {
     const audio = document.getElementById('peace-audio');
@@ -1243,6 +1255,7 @@
     let playing = false;
     btn.addEventListener('click', () => {
       if (!playing) {
+        stopAllPlayers();
         audio.play().then(() => {
           playing = true;
           icon.textContent = '⏸';
@@ -1276,6 +1289,7 @@
     let playing = false;
     btn.addEventListener('click', () => {
       if (!playing) {
+        stopAllPlayers();
         audio.play().then(() => {
           playing = true;
           icon.textContent = '⏸';
