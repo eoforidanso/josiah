@@ -532,9 +532,56 @@
       }
     }
 
-    @media (max-width: 560px) {
-      .card { padding: 28px 20px; }
-      header { padding: 60px 18px 52px; }
+    /* ── MOBILE: tablet ── */
+    @media (max-width: 680px) {
+      header { padding: 64px 20px 56px; }
+      .card { padding: 36px 28px; }
+      main { padding: 44px 16px 72px; }
+      .scripture-block { padding: 20px 20px; }
+    }
+
+    /* ── MOBILE: phone ── */
+    @media (max-width: 420px) {
+      header { padding: 52px 16px 44px; }
+
+      /* Tighten candles on small screens */
+      .candle-row { gap: 28px; margin-bottom: 28px; }
+
+      /* Smaller portrait */
+      .portrait-wrap { width: 148px; height: 148px; }
+
+      /* h1 already uses clamp — reduce letter-spacing so it doesn't overflow */
+      header h1 { letter-spacing: .04em; }
+
+      /* Eyebrow & badge: reduce letter-spacing to prevent overflow */
+      .eyebrow { letter-spacing: .18em; font-size: .68rem; }
+      .hoss-badge { letter-spacing: .18em; font-size: .65rem; padding: 5px 14px; }
+      .oos-label  { letter-spacing: .16em; }
+
+      /* Cards */
+      .card { padding: 28px 18px; margin-bottom: 18px; }
+      .sect-title { font-size: 1.55rem; }
+
+      /* Scripture */
+      .scripture-block { padding: 18px 14px; }
+      .scripture-text  { font-size: 1.08rem; }
+      .scripture-ref   { letter-spacing: .16em; }
+
+      /* Ritual list: let items wrap naturally */
+      .ritual-list li { flex-wrap: wrap; gap: 10px; justify-content: flex-start; text-align: left; padding-left: 4px; }
+
+      /* Response box: full width on phone */
+      .response-box { display: block; padding: 14px 18px; font-size: 1.05rem; }
+
+      /* Closing */
+      .closing { padding: 40px 12px 36px; }
+      .closing-ornament { letter-spacing: .28em; }
+
+      /* Main */
+      main { padding: 32px 12px 56px; }
+
+      /* Footer text wrapping */
+      .footer-copy { letter-spacing: .1em; font-size: .62rem; }
     }
   </style>
 </head>
