@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Vigil — In Memory of Josiah</title>
+  <meta name="description" content="A virtual vigil of remembrance for Josiah — HOSS Class of 1998. Join us as we honour his life, share memories, and hold him in our hearts." />
+  <meta name="theme-color" content="#1c1812" />
 
   <!-- Favicon / browser tab thumbnail -->
   <link rel="icon" type="image/png" href="josiah.png" />
@@ -12,18 +14,33 @@
   <!-- Social / link preview (Open Graph) -->
   <meta property="og:title" content="In Memory of Josiah — A Vigil of Remembrance" />
   <meta property="og:description" content="HOSS Class of 1998 · A virtual vigil to honour and celebrate the life of Josiah." />
-  <meta property="og:image" content="IMG_3681.jpg" />
+  <meta property="og:image" content="https://eoforidanso.github.io/josiah/IMG_3681.jpg" />
+  <meta property="og:url" content="https://eoforidanso.github.io/josiah/" />
   <meta property="og:type" content="website" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="In Memory of Josiah — A Vigil of Remembrance" />
   <meta name="twitter:description" content="HOSS Class of 1998 · A virtual vigil to honour and celebrate the life of Josiah." />
-  <meta name="twitter:image" content="IMG_3681.jpg" />
+  <meta name="twitter:image" content="https://eoforidanso.github.io/josiah/IMG_3681.jpg" />
+
+  <!-- Google Fonts (preconnect first for speed) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Lato:wght@300;400;700&display=swap" />
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Lato:wght@300;400;700&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+      #particles { display: none !important; }
+    }
 
     :root {
       --gold:       #b8914a;
@@ -542,7 +559,7 @@
   </div>
 
   <div class="portrait-wrap">
-    <img src="josiah.png" alt="Josiah" />
+    <img src="josiah.png" alt="Portrait of Josiah" width="192" height="192" />
   </div>
 
   <p class="beloved">Forever Beloved</p>
