@@ -775,6 +775,36 @@
       <li>Cameras on if comfortable</li>
       <li>Brief moment of silence</li>
     </ul>
+
+    <!-- It Is Well / When Peace Like a River player -->
+    <div style="margin-top:28px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--muted);margin-bottom:14px;letter-spacing:.04em;">
+        ♩ &nbsp;It Is Well with My Soul
+      </p>
+      <audio id="peace-audio" src="It Is Well with My Soul  Piano Instrumental with Lyrics.mp3" preload="none" style="display:none;"></audio>
+      <button id="peace-btn" aria-label="Play It Is Well with My Soul" style="
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 26px;
+        border-radius: 40px;
+        border: 1px solid rgba(184,145,74,.45);
+        background: rgba(28,24,18,.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        color: var(--gold-pale);
+        font-family: 'Lato', sans-serif;
+        font-size: .82rem;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform .25s ease, box-shadow .25s ease;
+        box-shadow: 0 4px 18px rgba(0,0,0,.22);
+      ">
+        <span id="peace-icon" style="font-size:1.1rem;">▶</span>
+        <span id="peace-label">Play</span>
+      </button>
+    </div>
   </div>
 
   <div class="card">
@@ -865,6 +895,39 @@
   window.addEventListener('scroll', () => {
     document.documentElement.style.setProperty('--scroll-y', window.scrollY + 'px');
   }, { passive: true });
+
+  // "It Is Well" inline player
+  (function() {
+    const audio = document.getElementById('peace-audio');
+    const btn   = document.getElementById('peace-btn');
+    const icon  = document.getElementById('peace-icon');
+    const lbl   = document.getElementById('peace-label');
+    if (!btn) return;
+    let playing = false;
+    btn.addEventListener('click', () => {
+      if (!playing) {
+        audio.play().then(() => {
+          playing = true;
+          icon.textContent = '⏸';
+          lbl.textContent  = 'Pause';
+          btn.setAttribute('aria-label', 'Pause It Is Well with My Soul');
+        }).catch(() => {});
+      } else {
+        audio.pause();
+        playing = false;
+        icon.textContent = '▶';
+        lbl.textContent  = 'Play';
+        btn.setAttribute('aria-label', 'Play It Is Well with My Soul');
+      }
+    });
+    audio.addEventListener('ended', () => {
+      playing = false;
+      icon.textContent = '▶';
+      lbl.textContent  = 'Play';
+    });
+    btn.addEventListener('mouseover', () => { btn.style.transform='scale(1.05)'; btn.style.boxShadow='0 8px 28px rgba(0,0,0,.32)'; });
+    btn.addEventListener('mouseout',  () => { btn.style.transform=''; btn.style.boxShadow='0 4px 18px rgba(0,0,0,.22)'; });
+  })();
 
   // Audio player
   (function() {
