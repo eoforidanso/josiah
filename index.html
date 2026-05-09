@@ -730,6 +730,35 @@
       animation-delay: -16s;
     }
 
+    /* FLYING DOVE */
+    .dove {
+      position: fixed;
+      top: 20%;
+      left: -120px;
+      font-size: 2.2rem;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0;
+      filter: drop-shadow(0 2px 8px rgba(184,145,74,.45));
+      transform-origin: center;
+      will-change: transform, opacity;
+    }
+    @keyframes dove-flap {
+      0%, 100% { transform: scaleY(1) rotate(-6deg); }
+      50%       { transform: scaleY(.72) rotate(-2deg); }
+    }
+    @keyframes dove-fly {
+      0%   { left: -120px; opacity: 0; }
+      5%   { opacity: .9; }
+      95%  { opacity: .9; }
+      100% { left: calc(100vw + 120px); opacity: 0; }
+    }
+    .dove.flying {
+      animation: dove-fly var(--fly-duration, 9s) linear forwards,
+                 dove-flap .42s ease-in-out infinite;
+    }
+    @media print { .dove { display: none; } }
+
     /* PRINT / PDF */
     @media print {
       @page { margin: 12mm 14mm; size: A4; }
@@ -867,6 +896,7 @@
 <body>
 
 <div id="particles"></div>
+<div class="dove" id="flying-dove" aria-hidden="true">🕊</div>
 <div class="bg-blob bg-blob-1"></div>
 <div class="bg-blob bg-blob-2"></div>
 <div class="bg-blob bg-blob-3"></div>
@@ -1207,6 +1237,28 @@
   });
 
   // Header parallax
+  // Flying dove
+  (function() {
+    const dove = document.getElementById('flying-dove');
+    if (!dove) return;
+    const lanes = [12, 22, 35, 48, 60, 72];
+    function fly() {
+      const top = lanes[Math.floor(Math.random() * lanes.length)];
+      const dur = 7 + Math.random() * 5;
+      dove.style.setProperty('--fly-duration', dur + 's');
+      dove.style.top = top + 'vh';
+      dove.classList.remove('flying');
+      void dove.offsetWidth; // reflow
+      dove.classList.add('flying');
+    }
+    function schedule() {
+      const delay = 12000 + Math.random() * 16000;
+      setTimeout(() => { fly(); schedule(); }, delay);
+    }
+    // First flight after 4s
+    setTimeout(() => { fly(); schedule(); }, 4000);
+  })();
+
   window.addEventListener('scroll', () => {
     document.documentElement.style.setProperty('--scroll-y', window.scrollY + 'px');
   }, { passive: true });
