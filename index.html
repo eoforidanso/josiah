@@ -359,6 +359,14 @@
       pointer-events: none;
       z-index: 10;
       line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      image-rendering: crisp-edges;
+    }
+    @media (max-width: 680px) {
+      .portrait-dove { font-size: 2.6rem; left: -58px; }
+    }
+    @media (max-width: 420px) {
+      .portrait-dove { font-size: 2rem; left: -46px; top: 18%; }
     }
     @keyframes dove-bob {
       0%, 100% { transform: translateY(calc(-50% - 4px)) scaleX(-1); }
@@ -374,7 +382,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      animation: glow-pulse 3.8s ease-in-out infinite, float 7s ease-in-out infinite;
+
     }
     .portrait-ring::before {
       content: '';
@@ -382,7 +390,7 @@
       inset: 0;
       border-radius: 50%;
       background: conic-gradient(from 0deg, var(--gold) 0%, var(--gold-light) 18%, rgba(240,224,192,.1) 36%, var(--gold-light) 55%, var(--gold) 72%, rgba(240,224,192,.08) 88%, var(--gold) 100%);
-      animation: ring-rotate 5s linear infinite;
+
     }
     .portrait-wrap {
       width: 192px; height: 192px;
@@ -737,21 +745,16 @@
       width: 620px; height: 620px;
       background: radial-gradient(circle, rgba(212,176,122,.22), transparent 68%);
       top: 0%; left: -16%;
-      animation: blob-drift 22s ease-in-out infinite alternate;
     }
     .bg-blob-2 {
       width: 520px; height: 520px;
       background: radial-gradient(circle, rgba(184,145,74,.17), transparent 68%);
       top: 40%; right: -13%;
-      animation: blob-drift 28s ease-in-out infinite alternate-reverse;
-      animation-delay: -10s;
     }
     .bg-blob-3 {
       width: 460px; height: 460px;
       background: radial-gradient(circle, rgba(240,224,192,.14), transparent 68%);
       bottom: 4%; left: 14%;
-      animation: blob-drift 24s ease-in-out infinite alternate;
-      animation-delay: -16s;
     }
 
     /* PRINT / PDF */
@@ -1194,15 +1197,7 @@
 </button>
 
 <script>
-  // Particles
-  const c = document.getElementById('particles');
-  for (let i = 0; i < 32; i++) {
-    const p = document.createElement('div');
-    p.className = 'p';
-    const s = Math.random() * 3.5 + 1.2;
-    p.style.cssText = `left:${Math.random()*100}%;width:${s}px;height:${s}px;--dx:${(Math.random()-.5)*70}px;animation-duration:${Math.random()*9+6}s;animation-delay:${Math.random()*14}s;`;
-    c.appendChild(p);
-  }
+
 
   // Scroll reveal
   const revealObs = new IntersectionObserver((entries) => {
