@@ -27,7 +27,8 @@
   <!-- Google Fonts (preconnect first for speed) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Lato:wght@300;400;700&display=swap" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Lato:wght@300;400;700&display=swap" onload="this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Lato:wght@300;400;700&display=swap" /></noscript>
 
   <style>
 
@@ -950,7 +951,7 @@
     <span class="portrait-dove" aria-hidden="true">🕊</span>
     <div class="portrait-ring">
       <div class="portrait-wrap">
-        <img src="josiah.png" alt="Portrait of Josiah" width="192" height="192" />
+        <img src="josiah.png" alt="Portrait of Josiah" width="192" height="192" loading="eager" decoding="async" />
       </div>
     </div>
   </div>
@@ -1305,15 +1306,17 @@
 
   // Ambient audio player (button is above this script)
   (function() {
-    const audio = new Audio('josiah-vigil-audio.m4a');
-    audio.loop = true;
-
     const btn = document.getElementById('audio-btn');
     const icon = document.getElementById('audio-icon');
     if (!btn) return;
+    let audio = null;
     let playing = false;
 
     btn.addEventListener('click', () => {
+      if (!audio) {
+        audio = new Audio('josiah-vigil-audio.m4a');
+        audio.loop = true;
+      }
       if (!playing) {
         audio.play().then(() => {
           playing = true;
