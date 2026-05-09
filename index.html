@@ -1311,6 +1311,15 @@
       if (!audio) {
         audio = new Audio('josiah-vigil-audio.m4a');
         audio.loop = true;
+        audio.addEventListener('play', () => {
+          audio.volume = 0;
+          let v = 0;
+          const fade = setInterval(() => {
+            v = Math.min(v + 0.02, 0.28);
+            audio.volume = v;
+            if (v >= 0.28) clearInterval(fade);
+          }, 80);
+        });
       }
       if (!playing) {
         audio.play().then(() => {
@@ -1324,17 +1333,6 @@
         icon.textContent = '♪';
         btn.setAttribute('aria-label', 'Play ambient music');
       }
-    });
-
-    // Fade in volume
-    audio.addEventListener('play', () => {
-      audio.volume = 0;
-      let v = 0;
-      const fade = setInterval(() => {
-        v = Math.min(v + 0.02, 0.28);
-        audio.volume = v;
-        if (v >= 0.28) clearInterval(fade);
-      }, 80);
     });
   })();
 </script>
