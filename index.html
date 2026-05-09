@@ -1045,6 +1045,36 @@
         <span id="peace-label">Play</span>
       </button>
     </div>
+
+    <!-- O God Our Help player -->
+    <div style="margin-top:18px;">
+      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--muted);margin-bottom:14px;letter-spacing:.04em;">
+        ♩ &nbsp;O God, Our Help in Ages Past
+      </p>
+      <audio id="ogod-audio" src="O God, Our Help in Ages Past Piano Accompaniment.mp3" preload="none" style="display:none;"></audio>
+      <button id="ogod-btn" aria-label="Play O God Our Help in Ages Past" style="
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 26px;
+        border-radius: 40px;
+        border: 1px solid rgba(184,145,74,.45);
+        background: rgba(28,24,18,.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        color: var(--gold-pale);
+        font-family: 'Lato', sans-serif;
+        font-size: .82rem;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform .25s ease, box-shadow .25s ease;
+        box-shadow: 0 4px 18px rgba(0,0,0,.22);
+      ">
+        <span id="ogod-icon" style="font-size:1.1rem;">▶</span>
+        <span id="ogod-label">Play</span>
+      </button>
+    </div>
   </div>
 
   <div class="card">
@@ -1183,6 +1213,39 @@
         icon.textContent = '▶';
         lbl.textContent  = 'Play';
         btn.setAttribute('aria-label', 'Play It Is Well with My Soul');
+      }
+    });
+    audio.addEventListener('ended', () => {
+      playing = false;
+      icon.textContent = '▶';
+      lbl.textContent  = 'Play';
+    });
+    btn.addEventListener('mouseover', () => { btn.style.transform='scale(1.05)'; btn.style.boxShadow='0 8px 28px rgba(0,0,0,.32)'; });
+    btn.addEventListener('mouseout',  () => { btn.style.transform=''; btn.style.boxShadow='0 4px 18px rgba(0,0,0,.22)'; });
+  })();
+
+  // "O God Our Help" inline player
+  (function() {
+    const audio = document.getElementById('ogod-audio');
+    const btn   = document.getElementById('ogod-btn');
+    const icon  = document.getElementById('ogod-icon');
+    const lbl   = document.getElementById('ogod-label');
+    if (!btn) return;
+    let playing = false;
+    btn.addEventListener('click', () => {
+      if (!playing) {
+        audio.play().then(() => {
+          playing = true;
+          icon.textContent = '⏸';
+          lbl.textContent  = 'Pause';
+          btn.setAttribute('aria-label', 'Pause O God Our Help in Ages Past');
+        }).catch(() => {});
+      } else {
+        audio.pause();
+        playing = false;
+        icon.textContent = '▶';
+        lbl.textContent  = 'Play';
+        btn.setAttribute('aria-label', 'Play O God Our Help in Ages Past');
       }
     });
     audio.addEventListener('ended', () => {
