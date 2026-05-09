@@ -730,34 +730,38 @@
       animation-delay: -16s;
     }
 
-    /* FLYING DOVE */
-    .dove {
+    /* PREMIUM DOVE SYSTEM */
+    #dove-container {
       position: fixed;
-      top: 20%;
-      left: -120px;
-      font-size: 2.2rem;
+      inset: 0;
       pointer-events: none;
-      z-index: 999;
-      opacity: 0;
-      filter: drop-shadow(0 2px 8px rgba(184,145,74,.45));
-      transform-origin: center;
+      z-index: 998;
+      overflow: hidden;
+    }
+    .dove-el {
+      position: absolute;
+      pointer-events: none;
       will-change: transform, opacity;
+      opacity: 0;
     }
-    @keyframes dove-flap {
-      0%, 100% { transform: scaleY(1) rotate(-6deg); }
-      50%       { transform: scaleY(.72) rotate(-2deg); }
+    .dove-el svg { display: block; overflow: visible; }
+    .d-wings {
+      transform-origin: 50% 55%;
+      animation: d-flap 0.34s ease-in-out infinite alternate;
     }
-    @keyframes dove-fly {
-      0%   { left: -120px; opacity: 0; }
-      5%   { opacity: .9; }
-      95%  { opacity: .9; }
-      100% { left: calc(100vw + 120px); opacity: 0; }
+    .d-wing-lo {
+      transform-origin: 50% 42%;
+      animation: d-flap-lo 0.34s ease-in-out infinite alternate;
     }
-    .dove.flying {
-      animation: dove-fly var(--fly-duration, 9s) linear forwards,
-                 dove-flap .42s ease-in-out infinite;
+    @keyframes d-flap {
+      from { transform: scaleY(1)   rotate(-7deg); }
+      to   { transform: scaleY(.48) rotate( 5deg); }
     }
-    @media print { .dove { display: none; } }
+    @keyframes d-flap-lo {
+      from { transform: scaleY(.48) rotate( 5deg); }
+      to   { transform: scaleY(1)   rotate(-7deg); }
+    }
+    @media print { #dove-container { display: none !important; } }
 
     /* PRINT / PDF */
     @media print {
@@ -896,7 +900,7 @@
 <body>
 
 <div id="particles"></div>
-<div class="dove" id="flying-dove" aria-hidden="true">🕊</div>
+<div id="dove-container" aria-hidden="true"></div>
 <div class="bg-blob bg-blob-1"></div>
 <div class="bg-blob bg-blob-2"></div>
 <div class="bg-blob bg-blob-3"></div>
@@ -1237,26 +1241,107 @@
   });
 
   // Header parallax
-  // Flying dove
+  // Premium multi-dove system — doves ascend toward Josiah's portrait
   (function() {
-    const dove = document.getElementById('flying-dove');
-    if (!dove) return;
-    const lanes = [12, 22, 35, 48, 60, 72];
-    function fly() {
-      const top = lanes[Math.floor(Math.random() * lanes.length)];
-      const dur = 7 + Math.random() * 5;
-      dove.style.setProperty('--fly-duration', dur + 's');
-      dove.style.top = top + 'vh';
-      dove.classList.remove('flying');
-      void dove.offsetWidth; // reflow
-      dove.classList.add('flying');
+    var container = document.getElementById('dove-container');
+    if (!container) return;
+    var POOL = 9;
+
+    function makeSVG(w, flap_delay) {
+      var h = Math.round(w * 0.58);
+      var d = flap_delay || '0s';
+      return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 100 58" fill="none" xmlns="http://www.w3.org/2000/svg">'
+        + '<filter id="glow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>'
+        + '<g filter="url(#glow)">'
+        // upper wing
+        + '<path class="d-wings" style="animation-delay:' + d + '" d="M50 26 C58 9 80 2 94 15 C79 8 61 15 50 26Z" fill="rgba(255,252,238,.95)"/>'
+        // lower wing
+        + '<path class="d-wing-lo" style="animation-delay:' + d + '" d="M50 32 C42 49 22 56 7 49 C21 47 39 40 50 32Z" fill="rgba(255,252,238,.90)"/>'
+        // body
+        + '<ellipse cx="46" cy="31" rx="18" ry="10" fill="rgba(255,252,238,.98)"/>'
+        // head
+        + '<circle cx="63" cy="24" r="9" fill="rgba(255,252,238,.98)"/>'
+        // beak
+        + '<polygon points="71,22 85,20 71,27" fill="rgba(212,176,122,.95)"/>'
+        // eye
+        + '<circle cx="65" cy="22" r="1.9" fill="rgba(28,24,18,.85)"/>'
+        // eye shine
+        + '<circle cx="66" cy="21" r="0.7" fill="rgba(255,255,255,.9)"/>'
+        // tail feathers
+        + '<path d="M28 33 C18 26 7 30 2 37 C10 28 20 28 28 33Z" fill="rgba(255,252,238,.88)"/>'
+        + '<path d="M26 35 C16 32 8 38 5 44 C12 34 20 32 26 35Z" fill="rgba(255,252,238,.78)"/>'
+        + '</g>'
+        + '</svg>';
     }
-    function schedule() {
-      const delay = 12000 + Math.random() * 16000;
-      setTimeout(() => { fly(); schedule(); }, delay);
+
+    var pool = [];
+    for (var i = 0; i < POOL; i++) {
+      var el = document.createElement('div');
+      el.className = 'dove-el';
+      container.appendChild(el);
+      pool.push({ el: el, busy: false });
     }
-    // First flight after 4s
-    setTimeout(() => { fly(); schedule(); }, 4000);
+
+    function launch(d) {
+      d.busy = true;
+      var el = d.el;
+      var vw = window.innerWidth, vh = window.innerHeight;
+      // Depth tiers: far (small), mid, near (large)
+      var tier = Math.random();
+      var size  = tier < 0.33 ? Math.round(28 + Math.random()*14)   // far: 28-42px
+                : tier < 0.67 ? Math.round(44 + Math.random()*18)   // mid: 44-62px
+                :               Math.round(64 + Math.random()*22);  // near: 64-86px
+      var maxOp = tier < 0.33 ? 0.45 + Math.random()*.2
+                : tier < 0.67 ? 0.60 + Math.random()*.2
+                :               0.78 + Math.random()*.17;
+      var flapDelay = (Math.random() * -0.34).toFixed(2) + 's';
+      el.innerHTML = makeSVG(size, flapDelay);
+      el.style.width = size + 'px';
+
+      // Launch zones: all converge toward portrait (top-center)
+      var zone = Math.floor(Math.random() * 6);
+      var sx, sy, flip;
+      if      (zone === 0) { sx = vw*(.04 + Math.random()*.22); sy = vh + 50;            flip = false; }
+      else if (zone === 1) { sx = vw*(.74 + Math.random()*.22); sy = vh + 50;            flip = true;  }
+      else if (zone === 2) { sx = vw*(.28 + Math.random()*.44); sy = vh + 70;            flip = Math.random()>.5; }
+      else if (zone === 3) { sx = -size - 10; sy = vh*(.3 + Math.random()*.6);           flip = false; }
+      else if (zone === 4) { sx = vw + size + 10; sy = vh*(.3 + Math.random()*.6);       flip = true;  }
+      else                 { sx = vw*(.10 + Math.random()*.80); sy = vh*(.5+Math.random()*.4); flip = Math.random()>.5; }
+
+      // Target: scatter around portrait at top-center
+      var tx = vw*(.30 + Math.random()*.40);
+      var ty = -(size + 40 + Math.random()*70);
+      var dur = Math.round(6500 + Math.random()*6500);
+      var flip1 = flip ? ' scaleX(-1)' : '';
+
+      // Slight curved path via a mid-point
+      var mx = (sx + tx)/2 + (Math.random()-0.5)*vw*0.18;
+      var my = (sy + ty)/2 - vh*0.05;
+
+      el.animate([
+        { transform: 'translate('+sx+'px,'+sy+'px)'+flip1, opacity: 0 },
+        { transform: 'translate('+Math.round(sx+(mx-sx)*.15)+'px,'+Math.round(sy+(my-sy)*.15)+'px)'+flip1, opacity: maxOp, offset: 0.07 },
+        { transform: 'translate('+mx+'px,'+my+'px)'+flip1, opacity: maxOp, offset: 0.50 },
+        { transform: 'translate('+Math.round(mx+(tx-mx)*.85)+'px,'+Math.round(my+(ty-my)*.85)+'px)'+flip1, opacity: maxOp*0.6, offset: 0.92 },
+        { transform: 'translate('+tx+'px,'+ty+'px)'+flip1, opacity: 0 }
+      ], { duration: dur, easing: 'cubic-bezier(.25,.1,.3,1)', fill: 'forwards' }).onfinish = function() { d.busy = false; };
+    }
+
+    function tick() {
+      // Launch 1-2 doves per tick
+      var launched = 0;
+      for (var i = 0; i < pool.length && launched < 2; i++) {
+        if (!pool[i].busy) { launch(pool[i]); launched++; }
+      }
+      setTimeout(tick, 1400 + Math.random()*2800);
+    }
+
+    // Staggered opening flock
+    setTimeout(function(){ launch(pool[0]); }, 800);
+    setTimeout(function(){ launch(pool[1]); }, 2200);
+    setTimeout(function(){ launch(pool[2]); }, 3800);
+    setTimeout(function(){ launch(pool[3]); }, 5500);
+    setTimeout(tick, 7000);
   })();
 
   window.addEventListener('scroll', () => {
