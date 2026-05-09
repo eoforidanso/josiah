@@ -865,6 +865,68 @@
   window.addEventListener('scroll', () => {
     document.documentElement.style.setProperty('--scroll-y', window.scrollY + 'px');
   }, { passive: true });
+
+  // Audio player
+  (function() {
+    const audio = new Audio('Building_a_Digital_Sanctuary_for_Josiah.m4a');
+    audio.loop = true;
+    audio.volume = 0.28;
+
+    const btn = document.getElementById('audio-btn');
+    const icon = document.getElementById('audio-icon');
+    let playing = false;
+
+    btn.addEventListener('click', () => {
+      if (!playing) {
+        audio.play().then(() => {
+          playing = true;
+          icon.textContent = '⏸';
+          btn.setAttribute('aria-label', 'Pause ambient music');
+        }).catch(() => {});
+      } else {
+        audio.pause();
+        playing = false;
+        icon.textContent = '♪';
+        btn.setAttribute('aria-label', 'Play ambient music');
+      }
+    });
+
+    // Fade in volume
+    audio.addEventListener('play', () => {
+      audio.volume = 0;
+      let v = 0;
+      const fade = setInterval(() => {
+        v = Math.min(v + 0.02, 0.28);
+        audio.volume = v;
+        if (v >= 0.28) clearInterval(fade);
+      }, 80);
+    });
+  })();
 </script>
+
+<!-- Audio toggle button -->
+<button id="audio-btn" aria-label="Play ambient music" style="
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 999;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(184,145,74,.5);
+  background: rgba(28,24,18,.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #d4b07a;
+  font-size: 1.22rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,.35), 0 0 0 1px rgba(184,145,74,.12);
+  transition: transform .25s ease, box-shadow .25s ease;
+" onmouseover="this.style.transform='scale(1.12)';this.style.boxShadow='0 8px 32px rgba(0,0,0,.45), 0 0 0 2px rgba(184,145,74,.3)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 24px rgba(0,0,0,.35), 0 0 0 1px rgba(184,145,74,.12)'">
+  <span id="audio-icon">♪</span>
+</button>
 </body>
 </html>
